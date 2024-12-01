@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../../../../../components/ui/button";
 import {
   Dialog,
@@ -20,9 +21,11 @@ export const LoginStateDialog = ({ isOpen, onClose }: { isOpen: boolean; onClose
 
         <DialogFooter>
           <div className="flex justify-between w-full">
-            <Button variant="outline" type="button">
-              Go to login page
-            </Button>
+            <Link href="/welcome">
+              <Button variant="outline" type="button">
+                Go to login page
+              </Button>
+            </Link>
             <Button onClick={onClose} type="button">
               Cancel
             </Button>

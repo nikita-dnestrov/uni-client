@@ -41,7 +41,7 @@ async function fetchProducts(searchParams: URLSearchParams) {
 
   //@ts-ignore
   const query = new URLSearchParams({ page: page.toString(), limit: "10", ...filters });
-
+  console.log(`${API_BASE_URL}/products?${query.toString()}`);
   const response = await axios.get(`${API_BASE_URL}/products?${query.toString()}`);
   return response.data;
 }
@@ -99,14 +99,12 @@ export default async function Page({
 
   const linkHrefGenerator = (key: string, value: string): string => {
     const searchParamsCopy = { ...searchParams, [key]: value };
-    console.log(searchParamsCopy);
 
     //@ts-ignore
     if (key in searchParams && searchParams[key] === value) {
       //@ts-ignore
       delete searchParamsCopy[key];
     }
-    console.log(searchParamsCopy);
     //@ts-ignore
     const urlQuery = new URLSearchParams(searchParamsCopy);
 

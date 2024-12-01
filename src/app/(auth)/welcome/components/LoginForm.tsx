@@ -6,6 +6,7 @@ import { Input } from "../../../../components/ui/input";
 import { Button } from "../../../../components/ui/button";
 import { useCallback } from "react";
 import { welcomePageApiService } from "../api";
+import { useRouter } from "next/navigation";
 
 type TProps = {
   onViewChange: () => void;
@@ -16,6 +17,7 @@ export function LoginForm({ onViewChange }: TProps) {
     email: string;
     password: string;
   };
+  const router = useRouter();
 
   const {
     register,
@@ -27,6 +29,9 @@ export function LoginForm({ onViewChange }: TProps) {
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     const response = await welcomePageApiService.login(data);
     localStorage.setItem("token", response.token);
+    localStorage.setItem("userId", response.userId);
+
+    router.push("/products");
   }, []);
 
   return (

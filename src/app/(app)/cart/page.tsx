@@ -23,7 +23,7 @@ export default function CartPage() {
       const checkUserId = localStorage.getItem("userId");
 
       if (checkLogin && checkUserId) {
-        const response = await cartPageApiService.getCart(checkUserId);
+        const response = await cartPageApiService.getCart(checkUserId, checkLogin);
         setCart(response.cartDetails);
         if (response.user.address) {
           setAddress(response.user.address);
@@ -38,14 +38,19 @@ export default function CartPage() {
   const handleProductQuantity = useCallback(
     async (colorId: string, productId: string, sizeId: string, quantity: number) => {
       const checkUserId = localStorage.getItem("userId");
-      if (checkUserId) {
-        const response = await cartPageApiService.addProductToCart({
-          userId: checkUserId,
-          colorId,
-          productId,
-          sizeId,
-          quantity,
-        });
+      const token = localStorage.getItem("token");
+
+      if (checkUserId && token) {
+        const response = await cartPageApiService.addProductToCart(
+          {
+            userId: checkUserId,
+            colorId,
+            productId,
+            sizeId,
+            quantity,
+          },
+          token
+        );
         setCart(response.cartDetails);
       }
     },
@@ -54,23 +59,30 @@ export default function CartPage() {
 
   const handleProductRemove = useCallback(async (cartDetailId: string) => {
     const checkUserId = localStorage.getItem("userId");
-    if (checkUserId) {
-      const response = await cartPageApiService.removeProductFromCart(cartDetailId, checkUserId);
+    const token = localStorage.getItem("token");
+
+    if (checkUserId && token) {
+      const response = await cartPageApiService.removeProductFromCart(cartDetailId, checkUserId, token);
       setCart(response.cartDetails);
     }
   }, []);
 
   const handleOrderCreate = useCallback(async () => {
     const userId = localStorage.getItem("userId");
-    if (userId) {
-      await cartPageApiService.createOrder({
-        userId,
-        status: 0,
-        orderDetails: cart.map((el) => {
-          return { amount: el.quantity, productId: el.productId, colorId: el.colorId, sizeId: el.sizeId };
-        }),
-      });
-      await cartPageApiService.clearCart(userId);
+    const token = localStorage.getItem("token");
+
+    if (userId && token) {
+      await cartPageApiService.createOrder(
+        {
+          userId,
+          status: 0,
+          orderDetails: cart.map((el) => {
+            return { amount: el.quantity, productId: el.productId, colorId: el.colorId, sizeId: el.sizeId };
+          }),
+        },
+        token
+      );
+      await cartPageApiService.clearCart(userId, token);
       setCart([]);
       setConfirmOrder(false);
     }
@@ -258,7 +270,19 @@ export default function CartPage() {
           </div>
         )
       ) : (
-        <div>not logged in</div>
+        <div className="flex gap-4 px-[500px] pt-[50px]">
+          <div className="w-full">
+            <Card className="w-full">
+              <CardHeader>
+                <CardDescription className="text-lg"></CardDescription>
+              </CardHeader>
+              <CardContent className="flex flex-col items-center">
+                Please login to access your cart via this <Link href="/welcome">link</Link>
+              </CardContent>
+              <CardFooter className="flex justify-between"></CardFooter>
+            </Card>
+          </div>
+        </div>
       )}
       <Dialog onOpenChange={() => setConfirmOrder((prev) => !prev)} open={confirmOrder}>
         <DialogContent className="sm:max-w-[425px]">

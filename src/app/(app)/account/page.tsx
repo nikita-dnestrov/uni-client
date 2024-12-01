@@ -51,9 +51,10 @@ export default function Page() {
   useEffect(() => {
     (async () => {
       const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
 
-      if (userId) {
-        const response = await userPageApiService.getUser(userId);
+      if (userId && token) {
+        const response = await userPageApiService.getUser(userId, token);
         setUser({ loading: false, authenticated: true, data: response });
         setValue("firstName", response.name.split(" ")[0]);
         setValue("lastName", response.name.split(" ")[1]);
@@ -69,19 +70,28 @@ export default function Page() {
 
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
 
-    if (userId) {
-      await userPageApiService.updateUser(userId, {
-        name: `${data.firstName} ${data.lastName}`,
-        phoneNumber: data.phoneNumber,
-      });
+    if (userId && token) {
+      await userPageApiService.updateUser(
+        userId,
+        {
+          name: `${data.firstName} ${data.lastName}`,
+          phoneNumber: data.phoneNumber,
+        },
+        token
+      );
 
-      await userPageApiService.updateUserAddress(userId, {
-        city: data.city,
-        street: data.street,
-      });
+      await userPageApiService.updateUserAddress(
+        userId,
+        {
+          city: data.city,
+          street: data.street,
+        },
+        token
+      );
 
-      const response = await userPageApiService.getUser(userId);
+      const response = await userPageApiService.getUser(userId, token);
       setUser({ loading: false, authenticated: true, data: response });
       setValue("firstName", response.name.split(" ")[0]);
       setValue("lastName", response.name.split(" ")[1]);
@@ -107,11 +117,12 @@ export default function Page() {
 
   const handleCancelOrder = useCallback(async () => {
     const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
 
-    if (userId) {
-      await userPageApiService.cancelOrder(preCancelOrderId);
+    if (userId && token) {
+      await userPageApiService.cancelOrder(preCancelOrderId, token);
 
-      const response = await userPageApiService.getUser(userId);
+      const response = await userPageApiService.getUser(userId, token);
       setUser({ loading: false, authenticated: true, data: response });
       setValue("firstName", response.name.split(" ")[0]);
       setValue("lastName", response.name.split(" ")[1]);
@@ -254,14 +265,16 @@ export default function Page() {
                                 return acc + el.size.price * el.amount;
                               }, 0)}
                             </div>
-                            <Button
-                              onClick={() => preHandleCancelOrder(order.id)}
-                              className="rounded"
-                              variant="destructive"
-                              type="button"
-                            >
-                              <Ban />
-                            </Button>
+                            {order.status !== -1 && (
+                              <Button
+                                onClick={() => preHandleCancelOrder(order.id)}
+                                className="rounded"
+                                variant="destructive"
+                                type="button"
+                              >
+                                <Ban />
+                              </Button>
+                            )}
                           </div>
                         </div>
                       );

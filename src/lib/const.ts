@@ -43,4 +43,4 @@ export const ORDER_STATUSES = (status: 0 | 1 | 2 | -1) => {
 };
 
 export const SERVER_BASE_URL = "http://localhost:5000";
-export const API_BASE_URL = "http://localhost:5000/api";
+export const API_BASE_URL = "http://0.0.0.0:5000/api";

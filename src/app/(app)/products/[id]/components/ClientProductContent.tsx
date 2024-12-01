@@ -45,15 +45,18 @@ export const ClientProductContent = ({ product }: { product: any }) => {
   const addProductToCart = useCallback(async () => {
     const userId = localStorage.getItem("userId");
     const token = localStorage.getItem("token");
-    console.log("test", userId, token);
+
     if (userId && token) {
-      await productPageApiService.addProductToCart({
-        userId,
-        productId: product.id,
-        colorId: chosenColor,
-        sizeId: chosenSize,
-        quantity: 1,
-      });
+      await productPageApiService.addProductToCart(
+        {
+          userId,
+          productId: product.id,
+          colorId: chosenColor,
+          sizeId: chosenSize,
+          quantity: 1,
+        },
+        token
+      );
       router.push("/cart");
     } else {
       setLoginStateDialog(true);

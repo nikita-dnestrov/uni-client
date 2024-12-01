@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { ShoppingBasket, User } from "lucide-react";
+import { Footprints, ShoppingBasket, User } from "lucide-react";
 import { NavbarSearch } from "./NavbarSearch";
 
 export function Navbar() {
@@ -9,7 +9,10 @@ export function Navbar() {
     <div className="flex justify-between items-center bg-black text-white font-bold">
       <div className="flex gap-10 items-center pl-10">
         <Link href="/products">
-          <div className="p-4 h-full">Logo</div>
+          <div className="p-4 h-full flex gap-2">
+            <Footprints />
+            Shoe Store
+          </div>
         </Link>
         <Link href={"/products?gender=Male"}>
           <Button className="p-8 font-bold" variant="ghost">
