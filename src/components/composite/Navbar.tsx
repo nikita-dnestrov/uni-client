@@ -3,6 +3,7 @@ import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Footprints, ShoppingBasket, User } from "lucide-react";
 import { NavbarSearch } from "./NavbarSearch";
+import { Suspense } from "react";
 
 export function Navbar() {
   return (
@@ -31,7 +32,9 @@ export function Navbar() {
         </Link>
       </div>
       {/* <Input className="w-1/3 bg-white text-black placeholder:font-normal rounded" placeholder="Search" /> */}
-      <NavbarSearch />
+      <Suspense fallback={<div></div>}>
+        <NavbarSearch />
+      </Suspense>
       <div className="flex gap-5 pr-10">
         <Link href="/cart">
           <ShoppingBasket />
