@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "../components/composite/Navbar";
+import { Navbar } from "../../components/composite/Navbar";
 
 const roboto = Roboto({
   weight: "400",
@@ -22,7 +21,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${roboto.className} antialiased`}>
-        <div className="w-full">{children}</div>
+        <Navbar />
+        <div className="p-4 w-full">{children}</div>
       </body>
     </html>
   );
