@@ -15,6 +15,7 @@ import { Ban } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../../components/ui/accordion";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "../../../components/ui/dialog";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type Inputs = {
   firstName: string;
@@ -45,10 +46,6 @@ export default function Page() {
   } = useForm<Inputs>();
 
   useEffect(() => {
-    console.log(isEdit);
-  }, [isEdit]);
-
-  useEffect(() => {
     (async () => {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
@@ -67,6 +64,8 @@ export default function Page() {
       }
     })();
   }, []);
+
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<Inputs> = useCallback(async (data) => {
     const userId = localStorage.getItem("userId");
@@ -149,12 +148,26 @@ export default function Page() {
     }
   };
 
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userId");
+    router.push("/products");
+  };
+
   return (
     <>
       {user.loading ? (
         <div>loading</div>
       ) : !user.authenticated ? (
-        <div>You are not logged in</div>
+        <div className="w-full flex flex-col items-center justify-center">
+          <span>You are not logged in</span>
+          <span>
+            Please login via this{" "}
+            <Link className="underline" href="/welcome">
+              link
+            </Link>
+          </span>
+        </div>
       ) : (
         <div className="flex gap-4 px-[20vw] pt-[50px]">
           <div className="w-full">
@@ -210,6 +223,12 @@ export default function Page() {
                   </div>
                   {isEdit && <Button className="mt-5 rounded">Apply Changes</Button>}
                 </form>
+
+                <Separator className="my-5" />
+
+                <Button className="w-full rounded" variant="outline" onClick={logout} type="button">
+                  Logout
+                </Button>
 
                 <Separator className="my-5" />
 

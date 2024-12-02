@@ -7,7 +7,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export const api = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "http://34.75.95.89:5000/api",
   headers: {
     Authorization:
       "Bearer " +

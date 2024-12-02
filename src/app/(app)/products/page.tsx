@@ -40,8 +40,8 @@ async function fetchProducts(searchParams: URLSearchParams) {
   const page = parseInt(searchParams.get("page") || "1", 10);
 
   //@ts-ignore
-  const query = new URLSearchParams({ page: page.toString(), limit: "10", ...filters });
-  console.log(`${API_BASE_URL}/products?${query.toString()}`);
+  const query = new URLSearchParams({ page: page.toString(), limit: "6", ...filters });
+
   const response = await axios.get(`${API_BASE_URL}/products?${query.toString()}`);
   return response.data;
 }
@@ -70,7 +70,7 @@ export default async function Page({
     (type: "material" | "gender" | "category" | "brand") => (el: { label: string; value: string }, i: number) => {
       return (
         <div key={i} className="flex gap-4 py-2 items-center">
-          <PaginationLink href={linkHrefGenerator(type, el.value)}>
+          <PaginationLink href={linkHrefGeneratorFilter(type, el.value)}>
             <Checkbox checked={searchParams[type] === el.value ? true : false} id={`${el.label}`} />
           </PaginationLink>
           <Label htmlFor={`${el.label}`}>{el.label}</Label>
@@ -105,6 +105,22 @@ export default async function Page({
       //@ts-ignore
       delete searchParamsCopy[key];
     }
+    //@ts-ignore
+    const urlQuery = new URLSearchParams(searchParamsCopy);
+
+    return `?${urlQuery.toString()}`;
+  };
+
+  const linkHrefGeneratorFilter = (key: string, value: string): string => {
+    const searchParamsCopy = { ...searchParams, [key]: value };
+
+    //@ts-ignore
+    if (key in searchParams && searchParams[key] === value) {
+      //@ts-ignore
+      delete searchParamsCopy[key];
+    }
+
+    searchParamsCopy.page = 1;
     //@ts-ignore
     const urlQuery = new URLSearchParams(searchParamsCopy);
 

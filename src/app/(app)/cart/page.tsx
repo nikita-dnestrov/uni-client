@@ -203,7 +203,7 @@ export default function CartPage() {
                         <div>
                           <TooltipProvider>
                             <Tooltip>
-                              <TooltipTrigger onClick={() => {}}>
+                              <TooltipTrigger className="underline" onClick={() => {}}>
                                 <div>Empty</div>
                               </TooltipTrigger>
                               <TooltipContent>
@@ -229,7 +229,7 @@ export default function CartPage() {
                       <div>
                         <TooltipProvider>
                           <Tooltip>
-                            <TooltipTrigger onClick={() => {}}>
+                            <TooltipTrigger className="underline" onClick={() => {}}>
                               <div>Empty</div>
                             </TooltipTrigger>
                             <TooltipContent>

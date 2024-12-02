@@ -4,7 +4,7 @@ import { ClientProductContent } from "./components/ClientProductContent";
 export default async function Page({ params }: { params: { id: string } }) {
   const productId = params.id;
   const getProduct = async () => {
-    const response = await axios.get(`http://0.0.0.0:5000/api/products/${productId}`);
+    const response = await axios.get(`http://34.75.95.89:5000/api/products/${productId}`);
 
     return response.data;
   };

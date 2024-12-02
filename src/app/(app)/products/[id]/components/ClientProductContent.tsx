@@ -19,7 +19,7 @@ import { Button } from "../../../../../components/ui/button";
 import { ShoppingBasket } from "lucide-react";
 import { cn } from "../../../../../lib/utils";
 import { Separator } from "../../../../../components/ui/separator";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../../../../components/ui/accordion";
 import { Badge } from "../../../../../components/ui/badge";
 import { productPageApiService } from "../api";
@@ -34,8 +34,14 @@ export const ClientProductContent = ({ product }: { product: any }) => {
 
   const router = useRouter();
 
+  useEffect(() => {
+    // console.log(product);
+    console.log(chosenSize);
+  }, [chosenColor]);
+
   const handleColorChoice = (id: string) => {
     setChosenColor(id);
+    setChosenSize(product.colors.find((el: any) => el.id === id).sizes[0].id);
   };
 
   const handleSizeChoice = (id: string) => {
@@ -68,13 +74,15 @@ export const ClientProductContent = ({ product }: { product: any }) => {
       <div className="w-1/2  ">
         <Carousel className="w-[350px]">
           <CarouselContent>
-            {product.colors[0].images.map((el: any) => {
-              return (
-                <CarouselItem key={el}>
-                  <img className="object-cover select-none" src={`${SERVER_BASE_URL}${el.url}`} alt="img" />
-                </CarouselItem>
-              );
-            })}
+            {product.colors
+              .find((el: any) => el.id === chosenColor)
+              .images.map((el: any) => {
+                return (
+                  <CarouselItem key={el}>
+                    <img className="object-cover select-none" src={`${SERVER_BASE_URL}${el.url}`} alt="img" />
+                  </CarouselItem>
+                );
+              })}
           </CarouselContent>
           <CarouselPrevious />
           <CarouselNext />
@@ -89,13 +97,13 @@ export const ClientProductContent = ({ product }: { product: any }) => {
           <CardContent className="flex flex-col gap-5">
             <div>
               <div className="text-sm text-gray-600">Colors</div>
-              <div className="flex gap-10 w-fit px-10 h-[40px] items-center rounded-xl overflow-hidden border border-slate-300">
+              <div className="flex w-fit h-[40px] items-center rounded-xl overflow-hidden border border-slate-300">
                 {product.colors.map((color: any, i: number) => (
                   <>
                     <div
                       key={color.id}
                       className={cn(
-                        "flex-1 text-center py-2 font-bold text-slate-600 hover:underline cursor-pointer transition-opacity",
+                        "flex-1 text-center py-2 font-bold text-slate-600 hover:underline cursor-pointer transition-opacity border-r border-slate-300 px-10 last:border-none",
                         chosenColor === color.id ? "underline" : "hover:underline"
                       )}
                       onClick={() => handleColorChoice(color.id)}
@@ -109,22 +117,23 @@ export const ClientProductContent = ({ product }: { product: any }) => {
             </div>
             <div>
               <div className="text-sm text-gray-600">Size</div>
-              <div className="flex gap-10 w-fit px-10 h-[40px] items-center rounded-xl overflow-hidden border border-slate-300">
+              <div className="flex w-fit h-[40px] items-center rounded-xl overflow-hidden border border-slate-300 ">
                 {product.colors
-                  .find((el: any) => el.id === chosenColor)
+                  .find((el: any) => {
+                    return el.id === chosenColor;
+                  })
                   .sizes.map((size: any, i: number) => (
                     <>
                       <div
                         key={size.id}
                         className={cn(
-                          "flex-1 text-center py-2 font-bold text-slate-600 hover:underline cursor-pointer transition-opacity",
+                          "flex-1 text-center py-2 font-bold text-slate-600 hover:underline cursor-pointer transition-opacity border-r border-slate-300 px-10 last:border-none",
                           chosenSize === size.id ? "underline" : "hover:underline"
                         )}
-                        onClick={() => handleColorChoice(size.id)}
+                        onClick={() => handleSizeChoice(size.id)}
                       >
                         {size.size}
                       </div>
-                      {product.colors.length !== i + 1 && <Separator orientation="vertical" />}
                     </>
                   ))}
               </div>
